@@ -1,0 +1,9 @@
+[gd_scene load_steps=4 format=3 uid="uid://b1ocqpnb8v7m1"]
+
+[ext_resource type="PackedScene" uid="uid://m1p8jjcn8qx1" path="res://battle_enemy.tscn" id="1_klq6m"]
+[ext_resource type="Texture2D" uid="uid://dogw60a3318l3" path="res://Art/arachne.png" id="2_lcf7p"]
+[ext_resource type="Script" uid="uid://chh77sok8cbel" path="res://boss_arachne.gd" id="3_vls8c"]
+
+[node name="BattleEnemy" instance=ExtResource("1_klq6m")]
+texture_normal = ExtResource("2_lcf7p")
+script = ExtResource("3_vls8c")
