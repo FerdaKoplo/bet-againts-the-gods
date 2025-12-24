@@ -44,18 +44,18 @@ var state = States.OPTIONS
 @onready var player = $Players/BattlePlayer 
 
 func _ready() -> void:
-	# Sembunyikan menu target musuh di awal
-	# (Jika $Enemies itu wadah musuh visual, mungkin jangan di-hide seluruhnya. 
-	#  Tapi kalau itu menu pilihan nama musuh, harus di-hide.)
-	# _enemies_menu.hide() 
-	
-	# Kita pastikan menu opsi muncul
+	# 1. Pastikan menu opsi muncul
 	_options_menu.show()
+	
+	# 2. HUBUNGKAN SIGNAL DARI MENU (Ini bagian barunya)
+	# Artinya: Kalau menu memancarkan sinyal "option_selected", panggil fungsi "_on_options_button_pressed"
+	if not _options_menu.option_selected.is_connected(_on_options_button_pressed):
+		_options_menu.option_selected.connect(_on_options_button_pressed)
+	
+	# 3. Fokus ke tombol pertama
 	_options_menu.button_focus(0)
 	
-	print("Battle dimulai!")
-
-# --- SYSTEM GILIRAN (TURN SYSTEM) ---
+	print("Battle dimulai! Menunggu input player...")
 
 func start_player_turn():
 	print("\n--- GILIRAN PLAYER ---")

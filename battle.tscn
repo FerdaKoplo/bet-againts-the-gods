@@ -158,11 +158,13 @@ layout_mode = 2
 size_flags_horizontal = 4
 text = "Item"
 
-[node name="MenuCursor" parent="." instance=ExtResource("7_0npn6")]
-layout_mode = 1
-offset_left = 143.0
-offset_top = 376.0
-offset_right = -489.0
-offset_bottom = -96.0
-
-[connection signal="button_pressed" from="Options/Options" to="." method="_on_options_button_pressed"]
+[node name="MenuCursor" parent="Options" instance=ExtResource("7_0npn6")]
+layout_mode = 0
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -3.0
+offset_top = 103.0
+offset_right = 97.0
+offset_bottom = 111.0
+cursor_offset = Vector2(-15, 0)
