@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://m1p8jjcn8qx1"]
+
+[ext_resource type="Texture2D" uid="uid://kqg7o3a54a1b" path="res://Art/bloodyboss1.png" id="1_u1kt3"]
+[ext_resource type="Script" uid="uid://t1klfd2ml5nu" path="res://script/battle_enemy.gd" id="2_j7mgt"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cmisi"]
+bg_color = Color(0.46875, 0.46875, 0.46875, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_j7mgt"]
+bg_color = Color(0.890625, 0.28875732, 0.28875732, 1)
+
+[node name="BattleEnemy" type="TextureButton"]
+offset_left = 217.0
+offset_top = 1.0
+offset_right = 617.0
+offset_bottom = 501.0
+scale = Vector2(0.52, 0.52)
+texture_normal = ExtResource("1_u1kt3")
+script = ExtResource("2_j7mgt")
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -86.538475
+offset_top = -7.692308
+offset_right = 78.84616
+offset_bottom = -2.307695
+grow_horizontal = 2
+scale = Vector2(1, 1.0459546)
+theme_override_styles/background = SubResource("StyleBoxFlat_cmisi")
+theme_override_styles/fill = SubResource("StyleBoxFlat_j7mgt")
+max_value = 400.0
+show_percentage = false

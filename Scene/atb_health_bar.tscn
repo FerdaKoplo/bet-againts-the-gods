@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://bvjoj7y4rx0hh"]
+
+[ext_resource type="Script" uid="uid://q3r5wclayepr" path="res://Scene/atb_health_bar.gd" id="1_n1udm"]
+
+[node name="ATBHealthBar" type="ProgressBar"]
+custom_minimum_size = Vector2(90, 0)
+size_flags_vertical = 4
+value = 50.0
+script = ExtResource("1_n1udm")

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://c64725ka75jx1"]
+
+[ext_resource type="Script" uid="uid://bk8rvmgww8vau" path="res://script/BaseEnemy.gd" id="1_ghel2"]
+[ext_resource type="Texture2D" uid="uid://kqg7o3a54a1b" path="res://Art/bloodyboss1.png" id="2_djrda"]
+
+[resource]
+script = ExtResource("1_ghel2")
+name = "bloddyboss"
+texture = ExtResource("2_djrda")
+health = 400

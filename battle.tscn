@@ -1,0 +1,244 @@
+[gd_scene load_steps=13 format=3 uid="uid://c8bhrw8bq1n24"]
+
+[ext_resource type="Script" uid="uid://dx3q4affw8sgv" path="res://script/battle.gd" id="1_i431l"]
+[ext_resource type="PackedScene" uid="uid://cjfrw15ht38yk" path="res://battle_player.tscn" id="1_oxp8w"]
+[ext_resource type="PackedScene" uid="uid://m1p8jjcn8qx1" path="res://battle_enemy.tscn" id="2_6t8i5"]
+[ext_resource type="PackedScene" uid="uid://bbf2ee1tv6gk7" path="res://Scene/window_default.tscn" id="2_7sfm4"]
+[ext_resource type="Resource" uid="uid://c64725ka75jx1" path="res://script/bloodyboss.tres" id="2_mhv3b"]
+[ext_resource type="Script" uid="uid://cxenrkikovum" path="res://script/menu.gd" id="5_6t8i5"]
+[ext_resource type="PackedScene" uid="uid://cy1m8kg2ailq4" path="res://Scene/battle_player_bar.tscn" id="6_dw4jg"]
+[ext_resource type="PackedScene" uid="uid://dfl18burojod" path="res://menu_cursor.tscn" id="7_0npn6"]
+
+[sub_resource type="Animation" id="Animation_mhv3b"]
+resource_name = "damage"
+length = 0.6
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemies/BattleEnemy:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.10269565, 0.19730437, 0.3, 0.40269566, 0.50539136, 0.6, 0.70269567, 0.8),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_lcjiy"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Enemies/BattleEnemy:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Players/BattlePlayer:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_ol6im"]
+resource_name = "player_damage"
+length = 0.7
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Players/BattlePlayer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.20122796, 0.30122796, 0.39968038, 0.49968037, 0.60090834),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_ol6im"]
+_data = {
+&"RESET": SubResource("Animation_lcjiy"),
+&"damage": SubResource("Animation_mhv3b"),
+&"player_damage": SubResource("Animation_ol6im")
+}
+
+[node name="Battle" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_i431l")
+enemy = ExtResource("2_mhv3b")
+
+[node name="BackgroundTemp" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.49354547, 0.49354553, 0.49354553, 1)
+
+[node name="Enemies" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_6t8i5")
+metadata/_edit_lock_ = true
+
+[node name="BattleEnemy" parent="Enemies" instance=ExtResource("2_6t8i5")]
+layout_mode = 0
+offset_left = 226.0
+offset_top = 11.0
+offset_right = 626.0
+offset_bottom = 511.0
+
+[node name="Players" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("5_6t8i5")
+metadata/_edit_lock_ = true
+
+[node name="BattlePlayer" parent="Players" instance=ExtResource("1_oxp8w")]
+layout_mode = 0
+offset_left = 78.0
+offset_top = 253.0
+offset_right = 168.0
+offset_bottom = 443.0
+
+[node name="BattlePlayer2" parent="Players" instance=ExtResource("1_oxp8w")]
+visible = false
+layout_mode = 0
+offset_left = 195.0
+offset_top = 256.0
+offset_right = 285.0
+offset_bottom = 446.0
+
+[node name="GUIMargin" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Bottom" type="HBoxContainer" parent="GUIMargin"]
+custom_minimum_size = Vector2(500, 110)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 8
+theme_override_constants/separation = 0
+alignment = 1
+
+[node name="Enemies" parent="GUIMargin/Bottom" instance=ExtResource("2_7sfm4")]
+layout_mode = 2
+
+[node name="Players" parent="GUIMargin/Bottom" instance=ExtResource("2_7sfm4")]
+layout_mode = 2
+size_flags_stretch_ratio = 2.0
+
+[node name="MarginContainer" type="MarginContainer" parent="GUIMargin/Bottom/Players"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUIMargin/Bottom/Players/MarginContainer"]
+layout_mode = 2
+
+[node name="BattlePlayerBar" parent="GUIMargin/Bottom/Players/MarginContainer/VBoxContainer" instance=ExtResource("6_dw4jg")]
+layout_mode = 2
+
+[node name="BattlePlayerBar2" parent="GUIMargin/Bottom/Players/MarginContainer/VBoxContainer" instance=ExtResource("6_dw4jg")]
+visible = false
+layout_mode = 2
+
+[node name="Options" parent="." instance=ExtResource("2_7sfm4")]
+custom_minimum_size = Vector2(100, 110)
+layout_mode = 0
+offset_left = 132.0
+offset_top = 366.0
+offset_right = 232.0
+offset_bottom = 476.0
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="Options" type="VBoxContainer" parent="Options"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -3.0
+offset_right = -3.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(1.0019203, 1.0203027)
+theme_override_constants/separation = -10
+alignment = 1
+script = ExtResource("5_6t8i5")
+
+[node name="Attack" type="Button" parent="Options/Options"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Attack"
+
+[node name="Skill" type="Button" parent="Options/Options"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Skill"
+
+[node name="Guard" type="Button" parent="Options/Options"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Guard"
+
+[node name="Item" type="Button" parent="Options/Options"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Item"
+
+[node name="Run" type="Button" parent="Options/Options"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Run"
+
+[node name="MenuCursor" parent="." instance=ExtResource("7_0npn6")]
+layout_mode = 1
+offset_left = 143.0
+offset_top = 376.0
+offset_right = -489.0
+offset_bottom = -96.0
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_ol6im")
+}
+
+[connection signal="button_pressed" from="Options/Options" to="." method="_on_options_button_pressed"]
+[connection signal="pressed" from="Options/Options/Attack" to="." method="_on_attack_pressed"]
+[connection signal="pressed" from="Options/Options/Guard" to="." method="_on_guard_pressed"]
+[connection signal="pressed" from="Options/Options/Run" to="." method="_on_run_pressed"]
