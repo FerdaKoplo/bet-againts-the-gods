@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://cjfrw15ht38yk"]
+
+[ext_resource type="Texture2D" uid="uid://ce1iye331f24t" path="res://Art/tom_combat.png" id="1_xl3td"]
+
+[node name="BattlePlayer" type="TextureButton"]
+offset_left = 75.0
+offset_top = 251.0
+offset_right = 165.0
+offset_bottom = 441.0
+texture_normal = ExtResource("1_xl3td")

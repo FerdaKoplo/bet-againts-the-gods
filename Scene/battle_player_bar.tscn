@@ -1,0 +1,23 @@
+[gd_scene load_steps=3 format=3 uid="uid://cy1m8kg2ailq4"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_1hwyu"]
+bg_color = Color(0.47058824, 0.47058824, 0.47058824, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pk4q0"]
+bg_color = Color(0.8901961, 0.2901961, 0.2901961, 1)
+
+[node name="BattlePlayerBar" type="HBoxContainer"]
+
+[node name="Name" type="Label" parent="."]
+layout_mode = 2
+text = "Player"
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+custom_minimum_size = Vector2(82.76, 2.065)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_styles/background = SubResource("StyleBoxFlat_1hwyu")
+theme_override_styles/fill = SubResource("StyleBoxFlat_pk4q0")
+value = 50.0
+show_percentage = false
