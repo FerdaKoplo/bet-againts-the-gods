@@ -9,7 +9,7 @@ var hp = 100
 var enemy_name = "Enemy"
 
 func _ready() -> void:
-	_atb_bar.hide()
+	#_atb_bar.hide()
 	hp = max_hp # Set darah penuh saat mulai
 
 # Fungsi untuk menerima serangan

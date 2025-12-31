@@ -7,3 +7,10 @@
 [node name="BattleEnemy" instance=ExtResource("1_klq6m")]
 texture_normal = ExtResource("2_lcf7p")
 script = ExtResource("3_vls8c")
+
+[node name="ATBHealthBar" parent="." index="0"]
+offset_left = 163.46155
+offset_top = 17.307693
+offset_right = 300.0
+offset_bottom = 25.0
+value = 100.0

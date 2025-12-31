@@ -1,37 +1,3 @@
-#extends Control
-#
-#enum States {
-	#OPTIONS,
-	#TARGETS,
-#}
-#
-#var state: States = States.OPTIONS
-#
-#@onready var _options: WindowDefault = $Options
-#@onready var _options_menu: Menu = $Options/Options
-#@onready var _enemies_menu: Menu = $Enemies
-#
-#func _ready() -> void:
-	#_options_menu.button_focus(0)
-#
-#func _unhandled_input(event: InputEvent) -> void:
-	#if event.is_action_pressed("ui_cancel"):
-		#match state:
-			#States.OPTIONS:
-				#pass
-			#States.TARGETS:
-				#state = States.OPTIONS
-				#_options_menu.button_focus()
-	#
-#func _on_options_button_focused(button: BaseButton) -> void:
-	#pass
-	#
-#func _on_options_button_pressed(button: BaseButton) -> void:
-	#match button.text:
-		#"Attack":
-			#state = States.TARGETS
-			#_enemies_menu.button_focus()
-			#
 extends Control
 
 enum States { OPTIONS, TARGETS }
@@ -39,9 +5,12 @@ var state = States.OPTIONS
 
 # --- REFERENSI NODE ---
 @onready var _options_menu = $Options/Options
-@onready var _enemies_menu = $Enemies
+#@onready var _enemies_menu = $Enemies
 @onready var boss = $Enemies/BossArachne
 @onready var player = $Players/BattlePlayer 
+#roll dice
+@onready var player_dice = $PlayerDice 
+@onready var enemy_dice = $EnemyDice
 
 func _ready() -> void:
 	# 1. Pastikan menu opsi muncul
@@ -80,40 +49,51 @@ func start_player_turn():
 	_options_menu.show()
 	_options_menu.button_focus(0)
 	# _enemies_menu.hide() # Sesuaikan jika perlu
-
-func enemy_turn():
-	print("\n--- GILIRAN MUSUH ---")
-	# Sembunyikan menu opsi saat musuh mikir
-	_options_menu.hide()
-	
-	await get_tree().create_timer(1.0).timeout
-	
-	# Panggil AI Boss yang sudah kita buat
-	# Boss akan otomatis pilih skill berdasarkan Phase-nya
-	boss.take_turn([player])
-	
-	# Kembalikan ke giliran player
-	await get_tree().create_timer(1.5).timeout
-	start_player_turn()
-
 # --- INPUT / KONTROL MENU ---
 
 func _on_options_button_pressed(button: BaseButton) -> void:
 	match button.text:
 		"Attack":
-			# Pindah ke mode memilih target
-			# Karena cuma ada 1 boss, kita buat simpel: langsung serang saja
-			# (Nanti bisa dikembangkan kalau musuhnya banyak)
-			print("Player memilih Attack -> Menyerang Boss!")
-			_player_attack_boss()
-			
+			_player_attack_boss() # Panggil logika serangan baru
 		"Defend":
 			print("Player bertahan!")
 			enemy_turn()
 
 func _player_attack_boss():
-	# Player menyerang Boss
-	boss.take_damage(20) # Damage player (bisa diganti stat asli)
+	# 1. Cek apakah node dadu ada sebelum digunakan (Safety Check)
+	if player_dice == null:
+		print("Error: Node PlayerDice tidak ditemukan di Scene Tree!")
+		return
 	
-	# Selesai nyerang, ganti giliran musuh
+	_options_menu.hide()
+	print("Player bersiap menyerang... Mengocok dadu!")
+	
+	# 2. Player kocok dadu dan tunggu hasilnya
+	var roll_result = await player_dice.roll() 
+	
+	# 3. Kalkulasi damage: Base 20 + (Hasil Dadu * 5)
+	# Jika dadu 1 = 25 damage, jika dadu 6 = 50 damage
+	var final_damage = 20 + (roll_result * 5)
+	
+	print("Hasil dadu: ", roll_result, " | Total Damage: ", final_damage)
+	
+	# 4. Berikan damage ke Boss
+	boss.take_damage(final_damage)
+	
+	# 5. Ganti giliran setelah jeda singkat
+	await get_tree().create_timer(1.0).timeout
 	enemy_turn()
+
+func enemy_turn():
+	print("\n--- GILIRAN BOSS ---")
+	_options_menu.hide()
+	
+	# 1. Boss kocok dadu
+	var roll_result = await enemy_dice.roll()
+	
+	# 2. Kirim hasil dadu ke Boss AI agar dia bisa menghitung damage-nya
+	# Kita modifikasi fungsi take_turn di boss agar menerima angka dadu
+	boss.take_turn([player], roll_result)
+	
+	await get_tree().create_timer(1.5).timeout
+	start_player_turn()

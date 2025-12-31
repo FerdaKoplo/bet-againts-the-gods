@@ -175,67 +175,40 @@ grow_vertical = 1
 script = ExtResource("8_pihy1")
 
 [node name="Dadu1" type="Sprite2D" parent="PlayerDice"]
-position = Vector2(321.00003, 242)
-scale = Vector2(0.9166667, 1)
 texture = ExtResource("9_slotg")
-hframes = 6
 
 [node name="Dadu2" type="Sprite2D" parent="PlayerDice"]
-position = Vector2(321, 243)
 texture = ExtResource("10_ix8ov")
-hframes = 6
 
 [node name="Dadu3" type="Sprite2D" parent="PlayerDice"]
-position = Vector2(321, 242)
 texture = ExtResource("11_bx4lf")
-hframes = 6
 
 [node name="Dadu4" type="Sprite2D" parent="PlayerDice"]
-position = Vector2(324, 240)
 texture = ExtResource("12_22sa7")
-hframes = 6
 
 [node name="Dadu5" type="Sprite2D" parent="PlayerDice"]
-position = Vector2(322, 241)
 texture = ExtResource("13_aacmo")
-hframes = 6
 
 [node name="Dadu6" type="Sprite2D" parent="PlayerDice"]
-position = Vector2(324, 240)
 texture = ExtResource("14_rggsl")
-hframes = 6
 
 [node name="EnemyDice" type="Node2D" parent="."]
 script = ExtResource("15_fljlq")
 
 [node name="Dadu1" type="Sprite2D" parent="EnemyDice"]
-position = Vector2(322, 241)
 texture = ExtResource("9_slotg")
-hframes = 6
-region_enabled = true
-region_rect = Rect2(0, 0, 361, 48)
 
 [node name="Dadu2" type="Sprite2D" parent="EnemyDice"]
-position = Vector2(319, 240)
 texture = ExtResource("10_ix8ov")
-hframes = 6
 
 [node name="Dadu3" type="Sprite2D" parent="EnemyDice"]
-position = Vector2(322, 240)
 texture = ExtResource("11_bx4lf")
-hframes = 6
 
 [node name="Dadu4" type="Sprite2D" parent="EnemyDice"]
-position = Vector2(322, 239)
 texture = ExtResource("12_22sa7")
-hframes = 6
 
 [node name="Dadu5" type="Sprite2D" parent="EnemyDice"]
-position = Vector2(322, 240)
 texture = ExtResource("13_aacmo")
-hframes = 6
 
 [node name="Dadu6" type="Sprite2D" parent="EnemyDice"]
-position = Vector2(324, 238)
 texture = ExtResource("14_rggsl")
-hframes = 6

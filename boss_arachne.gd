@@ -12,38 +12,28 @@ func _ready():
 
 # --- LOGIKA GILIRAN BOSS ---
 # Fungsi ini nanti akan dipanggil oleh Battle Manager
-func take_turn(targets: Array):
-	check_phase_change() # Cek apakah harus ganti fase?
+func take_turn(targets: Array, dice_value: int = 1):
+	check_phase_change()
 	
-	print("\n>>> Giliran " + enemy_name + " (Phase " + str(current_phase) + ") <<<")
+	# Boss Advantage: Jika dadu boss < 3, paksa jadi 3 (Boss tidak pernah terlalu lemah)
+	var boss_luck = max(dice_value, 3) 
 	
 	match current_phase:
 		Phase.PHASE_1:
-			# FASE 1: Hujan Jarum (Serang SEMUA target dengan damage kecil)
-			print(enemy_name + " menggunakan HUJAN JARUM!")
-			for target in targets:
-				if target.has_method("take_damage"):
-					target.take_damage(5)
-
-		Phase.PHASE_2:
-			# FASE 2: Puppet/Minion (Coba kendalikan player acak)
-			var target_acak = targets.pick_random()
-			print(enemy_name + " menatap " + target_acak.name + "...")
+			var dmg = 10 + (boss_luck * 2) # Damage stabil
+			targets[0].take_damage(dmg)
 			
-			# Cek apakah target punya fungsi 'apply_status'
-			if target_acak.has_method("apply_status"):
-				print("BOSS: Jadilah bonekaku!")
-				target_acak.apply_status("puppet")
+		Phase.PHASE_2:
+			# Peluang mengendalikan player lebih tinggi jika dadu besar
+			if boss_luck >= 5:
+				targets[0].apply_status("puppet")
 			else:
-				# Jika tidak bisa dikendalikan, serang biasa
-				target_acak.take_damage(15)
-
+				targets[0].take_damage(15)
+				
 		Phase.PHASE_3:
-			# FASE 3: Unraveling (Serangan FATAL ke satu target)
-			var target_acak = targets.pick_random()
-			print(enemy_name + " mengamuk! UNRAVELING pada " + target_acak.name + "!")
-			if target_acak.has_method("take_damage"):
-				target_acak.take_damage(40) # Damage besar
+			# Serangan mematikan: Damage dasar besar + bonus dadu
+			var fatal_dmg = 30 + (boss_luck * 5) 
+			targets[0].take_damage(fatal_dmg)
 
 # --- CEK PERGANTIAN FASE ---
 func check_phase_change():
