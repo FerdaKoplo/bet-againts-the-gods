@@ -5,10 +5,18 @@ enum Phase { PHASE_1, PHASE_2, PHASE_3 }
 var current_phase = Phase.PHASE_1
 
 func _ready():
-	super._ready() # Jalankan setup dari script dasar
-	max_hp = 500   # Boss darahnya tebal
+	super._ready() # 1. Ini menjalankan setup awal (set bar ke 100/100)
+	
+	# 2. Kita timpa nilai HP untuk Boss
+	max_hp = 500
 	hp = max_hp
 	enemy_name = "Weaver Arachne"
+	
+	# --- TAMBAHAN PENTING ---
+	# Update ulang Health Bar agar sesuai dengan 500 HP, bukan 100
+	if _atb_bar:
+		_atb_bar.max_value = max_hp
+		_atb_bar.value = hp
 
 # --- LOGIKA GILIRAN BOSS ---
 # Fungsi ini nanti akan dipanggil oleh Battle Manager

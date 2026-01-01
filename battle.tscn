@@ -1,4 +1,4 @@
-[gd_scene load_steps=16 format=3 uid="uid://c8bhrw8bq1n24"]
+[gd_scene load_steps=17 format=3 uid="uid://c8bhrw8bq1n24"]
 
 [ext_resource type="Script" uid="uid://dx3q4affw8sgv" path="res://script/battle.gd" id="1_i431l"]
 [ext_resource type="PackedScene" uid="uid://cjfrw15ht38yk" path="res://battle_player.tscn" id="1_oxp8w"]
@@ -16,7 +16,19 @@
 [ext_resource type="Texture2D" uid="uid://btl00fknufsw6" path="res://Art/dice/dadu 6.png" id="14_rggsl"]
 [ext_resource type="Script" uid="uid://b454rslyif0ja" path="res://enemy_dice.gd" id="15_fljlq"]
 
-[node name="Battle" type="Control"]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pihy1"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(1, 1, 1, 1)
+corner_radius_top_left = 1
+corner_radius_top_right = 1
+corner_radius_bottom_right = 1
+corner_radius_bottom_left = 1
+
+[node name="Battle" type="Control" node_paths=PackedStringArray("health_bar_ui")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -24,6 +36,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_i431l")
+health_bar_ui = NodePath("GUIMargin/Bottom/Players/MarginContainer/VBoxContainer/BattlePlayerBar/HealthBar")
 
 [node name="BackgroundTemp" type="ColorRect" parent="."]
 layout_mode = 1
@@ -46,10 +59,11 @@ metadata/_edit_lock_ = true
 
 [node name="BossArachne" parent="Enemies" instance=ExtResource("7_mhv3b")]
 layout_mode = 0
-offset_left = 200.0
-offset_top = 91.0
-offset_right = 711.53845
-offset_bottom = 548.69226
+offset_left = 152.0
+offset_top = -5.999996
+offset_right = 682.0
+offset_bottom = 421.14282
+scale = Vector2(0.7, 0.7)
 
 [node name="Players" type="Control" parent="."]
 layout_mode = 1
@@ -63,10 +77,10 @@ metadata/_edit_lock_ = true
 
 [node name="BattlePlayer" parent="Players" instance=ExtResource("1_oxp8w")]
 layout_mode = 0
-offset_left = 78.0
-offset_top = 253.0
-offset_right = 168.0
-offset_bottom = 443.0
+offset_left = 80.0
+offset_top = 247.0
+offset_right = 170.0
+offset_bottom = 437.0
 
 [node name="GUIMargin" type="MarginContainer" parent="."]
 layout_mode = 1
@@ -75,6 +89,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+metadata/_edit_lock_ = true
 
 [node name="Bottom" type="HBoxContainer" parent="GUIMargin"]
 custom_minimum_size = Vector2(500, 110)
@@ -121,7 +136,7 @@ custom_minimum_size = Vector2(100, 110)
 layout_mode = 0
 offset_left = 132.0
 offset_top = 366.0
-offset_right = 232.0
+offset_right = 238.0
 offset_bottom = 476.0
 size_flags_horizontal = 0
 size_flags_vertical = 8
@@ -132,32 +147,41 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -3.0
-offset_right = -3.0
+offset_top = 1.0
+offset_right = -2.0
+offset_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = -4
+theme_override_constants/separation = -10
 alignment = 1
 script = ExtResource("5_6t8i5")
 
-[node name="Button" type="Button" parent="Options/Options"]
+[node name="Attack" type="Button" parent="Options/Options"]
+clip_contents = true
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Attack"
 
-[node name="Button2" type="Button" parent="Options/Options"]
+[node name="Skill" type="Button" parent="Options/Options"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Skill"
 
-[node name="Button3" type="Button" parent="Options/Options"]
+[node name="Guard" type="Button" parent="Options/Options"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Guard"
 
-[node name="Button4" type="Button" parent="Options/Options"]
+[node name="Item" type="Button" parent="Options/Options"]
 layout_mode = 2
 size_flags_horizontal = 4
 text = "Item"
+
+[node name="Run" type="Button" parent="Options/Options"]
+layout_mode = 2
+size_flags_horizontal = 4
+text = "Run
+"
 
 [node name="MenuCursor" parent="Options" instance=ExtResource("7_0npn6")]
 layout_mode = 0
@@ -166,12 +190,13 @@ anchor_right = 0.0
 anchor_bottom = 0.0
 offset_left = 6.0
 offset_top = 11.0
-offset_right = 106.0
+offset_right = 16.0
 offset_bottom = 19.0
 grow_horizontal = 1
 grow_vertical = 1
 
 [node name="PlayerDice" type="Node2D" parent="."]
+visible = false
 script = ExtResource("8_pihy1")
 
 [node name="Dadu1" type="Sprite2D" parent="PlayerDice"]
@@ -206,6 +231,7 @@ texture = ExtResource("14_rggsl")
 hframes = 6
 
 [node name="EnemyDice" type="Node2D" parent="."]
+visible = false
 script = ExtResource("15_fljlq")
 
 [node name="Dadu1" type="Sprite2D" parent="EnemyDice"]
@@ -239,3 +265,31 @@ hframes = 6
 position = Vector2(324, 238)
 texture = ExtResource("14_rggsl")
 hframes = 6
+
+[node name="PanelContainer" type="PanelContainer" parent="."]
+visible = false
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.55200005
+anchor_top = 0.68500006
+anchor_right = 0.55200005
+anchor_bottom = 0.68500006
+offset_left = -158.28003
+offset_top = -31.800018
+offset_right = 195.71997
+offset_bottom = 34.19998
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_pihy1")
+
+[node name="battle_log" type="RichTextLabel" parent="PanelContainer"]
+visible = false
+layout_mode = 2
+bbcode_enabled = true
+scroll_following = true
+scroll_following_visible_characters = true
+metadata/_edit_lock_ = true
+
+[connection signal="health_changed" from="Players/BattlePlayer" to="GUIMargin/Bottom/Players" method="_on_battle_player_health_changed"]
+
+[editable path="GUIMargin/Bottom/Players/MarginContainer/VBoxContainer/BattlePlayerBar"]

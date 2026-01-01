@@ -5,12 +5,17 @@
 [ext_resource type="Script" uid="uid://chh77sok8cbel" path="res://boss_arachne.gd" id="3_vls8c"]
 
 [node name="BattleEnemy" instance=ExtResource("1_klq6m")]
+offset_left = 108.0
+offset_top = 12.0
+offset_right = 746.4616
+offset_bottom = 535.0769
 texture_normal = ExtResource("2_lcf7p")
+stretch_mode = 0
 script = ExtResource("3_vls8c")
 
 [node name="ATBHealthBar" parent="." index="0"]
-offset_left = 163.46155
-offset_top = 17.307693
-offset_right = 300.0
-offset_bottom = 25.0
+offset_left = 138.46153
+offset_top = 23.076925
+offset_right = 342.30768
+offset_bottom = 34.615383
 value = 100.0
