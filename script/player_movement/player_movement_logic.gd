@@ -1,6 +1,6 @@
 extends CharacterBody2D
 
-@export var speed: float = 200.0
+@export var speed: float = 40.0
 @onready var sprite = $AnimatedSprite2D 
 
 enum MovementState {

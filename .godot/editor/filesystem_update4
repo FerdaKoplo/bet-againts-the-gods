@@ -1,6 +1,0 @@
-res://Scene/world/alley/alley_world.tscn
-res://Scene/world/alley/LootContainer.gd
-res://Scene/world/alley/loot_container.gd
-res://script/player_movement/player_movement_logic.gd
-res://Scene/world/alley/inventory_panel.gd
-res://Scene/world/alley/loot_message.gd

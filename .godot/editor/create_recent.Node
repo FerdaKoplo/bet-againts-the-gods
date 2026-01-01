@@ -1,8 +1,12 @@
-Label
 Node2D
+PointLight2D
+ColorRect
+CanvasLayer
+WorldEnvironment
+CanvasModulate
+Label
 ConfirmationDialog
 VBoxContainer
 Panel
-CanvasLayer
 CollisionShape2D
 Area2D
