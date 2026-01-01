@@ -15,146 +15,203 @@ var is_defending = false
 @onready var player_dice = $PlayerDice 
 @onready var enemy_dice = $EnemyDice
 @export var health_bar_ui: Range
-
-# --- REFERENSI CURSOR YANG SUDAH ADA ---
-# Sesuaikan path ini dengan letak cursor kamu di Scene Tree
 @onready var menu_cursor = $Options/MenuCursor 
 
+# --- REFERENSI UI LOG (Panel & Text) ---
+# Pastikan nama node di Scene Tree sesuai dengan path ini
+@onready var log_panel = $PanelContainer 
+@onready var log_text = $PanelContainer/battle_log 
+
 func _ready() -> void:
-	# 1. Menu opsi muncul
+	# 1. Setup Menu
 	_options_menu.show()
-	
-	# 2. Hubungkan Signal
 	if not _options_menu.button_pressed.is_connected(_on_options_button_pressed):
 		_options_menu.button_pressed.connect(_on_options_button_pressed)
-	
-	# 3. Fokus ke tombol pertama
 	_options_menu.button_focus(0)
 	
-	# SETUP SIGNAL (Sudah benar di kode Anda)
+	# 2. Setup Log Panel (Sembunyikan saat awal)
+	if log_panel:
+		log_panel.hide()
+	
+	# 3. Konek Signal Boss (PENTING: Agar teks dari Boss muncul di layar)
+	if boss.has_signal("send_log"):
+		if not boss.is_connected("send_log", _on_log_received):
+			boss.connect("send_log", _on_log_received)
+	else:
+		print("PERINGATAN: BossArachne.gd belum memiliki signal 'send_log'. Update script Boss dulu!")
+	
+	# 4. Setup Player Signals
 	if player.has_signal("health_changed"):
 		if not player.health_changed.is_connected(_on_battle_player_health_changed):
 			player.health_changed.connect(_on_battle_player_health_changed)
 	
-	# SETUP AWAL HEALTH BAR
-	# Kita set max value saat game mulai
+	# 5. Setup UI Health Bar
 	if health_bar_ui:
 		health_bar_ui.max_value = player.max_hp
 		health_bar_ui.value = player.hp
-	else:
-		print("ERROR: Lupa memasukkan node HealthBar ke Inspector 'Battle'!")
-	
-	print("Battle dimulai! Menunggu input player...")
 
-# --- INPUT UNTUK KONFIRMASI SERANGAN ---
+# --- FUNGSI TAMPILKAN LOG (FIXED COLOR) ---
+func display_log(message: String):
+	print("[BATTLE LOG] " + message) # Print ke output bawah untuk debug
+	
+	if log_panel and log_text:
+		log_panel.show()
+		log_text.show() # Paksa teks terlihat jika property visible-nya false
+		# [FIX] Tambahkan tag [color=white] agar teks selalu putih terang
+		log_text.text = "[center][color=white]" + message + "[/color][/center]" 
+
+# Fungsi penerima signal dari Boss
+func _on_log_received(msg):
+	display_log(msg)
+
+# --- INPUT HANDLING ---
 func _input(event: InputEvent) -> void:
 	if state == States.TARGETS:
-		if event.is_action_pressed("ui_accept"): # Tombol Enter/Spasi/Z
+		if event.is_action_pressed("ui_accept"): 
 			_confirm_attack()
-		elif event.is_action_pressed("ui_cancel"): # Tombol Esc/X
+		elif event.is_action_pressed("ui_cancel"): 
 			_cancel_selection()
 
+# --- ALUR TURN PLAYER ---
 func start_player_turn():
-	print("\n--- GILIRAN PLAYER ---")
+	print("\n--- GILIRAN BARU ---")
 	
-	# Reset cursor ke mode UI normal jika belum
+	# Reset status defend
+	if player.is_defending:
+		player.is_defending = false
+		print("Posisi bertahan dilepaskan.")
+	
 	if menu_cursor.has_method("reset_to_ui_mode"):
 		menu_cursor.reset_to_ui_mode()
 
-	# 1. CEK STATUS PUPPET
+	# 1. CEK STATUS PUPPET (Jika Player dikendalikan Boss)
 	if player.is_controlled():
-		print("!!! Player dikendalikan benang Boss!")
-		await get_tree().create_timer(1.0).timeout
+		display_log("!!! Kamu dikendalikan oleh Boss!")
+		await get_tree().create_timer(1.5).timeout
 		player.take_damage(10)
-		await get_tree().create_timer(1.0).timeout
-		enemy_turn()
+		
+		# Skip turn player, langsung giliran Boss
+		_execute_boss_only_turn()
 		return
 
 	# 2. JIKA NORMAL
 	state = States.OPTIONS
 	_options_menu.show()
-	_options_menu.button_focus(0) # Ini akan memicu cursor otomatis menempel ke tombol
+	_options_menu.button_focus(0)
+	
+	# Sembunyikan panel log saat menu muncul agar tidak menutupi
+	if log_panel: log_panel.hide()
 
 func _on_options_button_pressed(button: BaseButton) -> void:
 	match button.text:
 		"Attack":
 			_start_target_selection()
-		"Defend":
-			print("Player bertahan!")
+			
+		"Guard":
+			display_log("Player bersiap menangkis serangan!")
+			player.is_defending = true
 			state = States.BUSY
-			enemy_turn()
+			_options_menu.hide()
+			
+			# Langsung ke giliran boss (tanpa roll dadu player)
+			_execute_boss_only_turn()
+		
+		"Run":
+			display_log("Tidak bisa lari dari takdir!")
+			await get_tree().create_timer(1.0).timeout
+			# Kembali ke menu (gagal lari)
+			if log_panel: log_panel.hide()
 
-# --- LOGIKA TARGETING BARU ---
-
+# --- TARGETING ---
 func _start_target_selection():
 	state = States.TARGETS
-	
-	# Sembunyikan menu opsi
 	_options_menu.hide()
 	
-	# --- PERUBAHAN DI SINI ---
-	
-	# 1. Hitung titik tengah badan Boss
-	# Kita ambil ukuran (size) boss lalu dibagi 2 agar dapat titik tengahnya
+	# Arahkan kursor ke badan boss (sesuaikan offset jika perlu)
 	var offset_ke_badan = Vector2(boss.size.x / 14, boss.size.y / 7)
-	
-	# (Opsional) Jika cursor terlalu menimpa badan, kurangi nilai X agar geser ke kiri sedikit
-	# offset_ke_badan.x -= 20 
-	
-	# 2. Masukkan offset tersebut sebagai parameter kedua
 	menu_cursor.point_to_target(boss, offset_ke_badan)
 
 func _confirm_attack():
 	state = States.BUSY
-	
-	# Kembalikan cursor ke mode UI (dia akan hilang sementara sampai menu muncul lagi)
 	menu_cursor.reset_to_ui_mode()
-	
-	_player_attack_boss()
+	_execute_battle_round()
 
 func _cancel_selection():
-	# Batal serang, kembali ke menu
 	state = States.OPTIONS
-	
 	menu_cursor.reset_to_ui_mode()
-	
 	_options_menu.show()
-	_options_menu.button_focus(0) # Cursor akan otomatis menempel lagi ke tombol Attack
+	_options_menu.button_focus(0)
 
-func _player_attack_boss():
-	if player_dice == null: return
+# --- LOGIKA BATTLE UTAMA (ATTACK NORMAL) ---
+func _execute_battle_round():
+	if player_dice == null or enemy_dice == null: return
 	
-	print("Mengocok dadu...")
-	var roll_result = await player_dice.roll() 
+	# 1. Player Roll
+	var player_roll = await player_dice.roll()
 	
-	# --- UBAH BAGIAN INI ---
-	# LAMA: var final_damage = 20 + (roll_result * 5)
+	# 2. Boss Roll
+	await get_tree().create_timer(0.5).timeout
+	var boss_roll = await enemy_dice.roll()
 	
-	# BARU (Lebih Kecil):
-	# Base damage 10, dan setiap angka dadu bernilai 3 damage
-	var final_damage = 10 + (roll_result * 3)
-	
-	print("Hasil dadu: ", roll_result, " | Total Damage: ", final_damage)
-	boss.take_damage(final_damage)
-	
-	await get_tree().create_timer(1.0).timeout
-	enemy_turn()
-
-func enemy_turn():
-	print("\n--- GILIRAN BOSS ---")
-	_options_menu.hide()
-	
-	var roll_result = await enemy_dice.roll()
-	boss.take_turn([player], roll_result)
+	# Safety check
+	if boss_roll == null: boss_roll = 1
+	if player_roll == null: player_roll = 1
 	
 	await get_tree().create_timer(1.5).timeout
+	
+	# 3. Player Attack Execution
+	# Rumus damage: Basic + (Dadu * 3)
+	var player_dmg = 10 + (player_roll * 3)
+	
+	display_log("Player menyerang! -" + str(player_dmg) + " damage")
+	boss.take_damage(player_dmg)
+	
+	# Cek jika Boss kalah
+	if boss.hp <= 0:
+		await get_tree().create_timer(1.0).timeout
+		display_log("VICTORY! Weaver Arachne defeated.")
+		boss.queue_free()
+		return 
+
+	# 4. Boss Attack Execution
+	await get_tree().create_timer(1.5).timeout
+	
+	# Boss akan mengirim log sendiri via signal saat take_turn dipanggil
+	boss.take_turn([player], boss_roll)
+	
+	# Cek jika Player kalah
+	if player.hp <= 0:
+		await get_tree().create_timer(1.0).timeout
+		display_log("GAME OVER...")
+		return
+
+	# 5. Kembali ke Turn Player
+	await get_tree().create_timer(2.5).timeout
 	start_player_turn()
 
-
-func _on_battle_player_health_changed(new_hp, max_hp):
-	print("Signal diterima Battle! Update UI ke: ", new_hp)
+# --- LOGIKA GUARD (BOSS INSTANT TURN) ---
+func _execute_boss_only_turn():
+	# Jeda sebentar agar player sempat baca log "Bersiap menangkis"
+	await get_tree().create_timer(1.0).timeout
 	
+	display_log("Boss mengambil kesempatan menyerang!")
+	await get_tree().create_timer(1.0).timeout
+	
+	# Boss roll otomatis '4' saat player guard (tanpa animasi dadu)
+	var fixed_boss_roll = 4 
+	
+	if boss and boss.has_method("take_turn"):
+		boss.take_turn([player], fixed_boss_roll)
+	
+	if player.hp <= 0:
+		await get_tree().create_timer(1.0).timeout
+		display_log("GAME OVER...")
+		return
+
+	await get_tree().create_timer(2.5).timeout
+	start_player_turn()
+
+# Update Health Bar
+func _on_battle_player_health_changed(new_hp, max_hp):
 	if health_bar_ui:
 		health_bar_ui.value = new_hp
-	else:
-		print("ERROR: health_bar_ui belum di-assign di Inspector!")

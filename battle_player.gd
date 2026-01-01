@@ -5,16 +5,17 @@ signal health_changed(new_hp, max_hp)
 
 var hp = 100
 var max_hp = 100
-var status_effects = [] 
-
-# [2] HAPUS baris @onready var health_bar ... agar tidak error
-# (Jangan pakai %HealthBar lagi)
+var status_effects = []
+var is_defending = false 
 
 func _ready() -> void:
 	# [3] Kirim signal saat mulai
 	health_changed.emit(hp, max_hp)
 
 func take_damage(amount):
+	if is_defending:
+		amount = ceil(amount / 2.0) # Diskon damage 50% (dibulatkan ke atas)
+		print("GUARD AKTIF! Damage berkurang menjadi: ", amount)
 	hp -= amount
 	
 	# [4] Kirim signal saat kena damage

@@ -267,7 +267,6 @@ texture = ExtResource("14_rggsl")
 hframes = 6
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-visible = false
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.55200005
@@ -283,12 +282,10 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_pihy1")
 
 [node name="battle_log" type="RichTextLabel" parent="PanelContainer"]
-visible = false
 layout_mode = 2
 bbcode_enabled = true
 scroll_following = true
 scroll_following_visible_characters = true
-metadata/_edit_lock_ = true
 
 [connection signal="health_changed" from="Players/BattlePlayer" to="GUIMargin/Bottom/Players" method="_on_battle_player_health_changed"]
 
