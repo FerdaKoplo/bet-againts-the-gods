@@ -23,10 +23,6 @@ border_width_top = 1
 border_width_right = 1
 border_width_bottom = 1
 border_color = Color(1, 1, 1, 1)
-corner_radius_top_left = 1
-corner_radius_top_right = 1
-corner_radius_bottom_right = 1
-corner_radius_bottom_left = 1
 
 [node name="Battle" type="Control" node_paths=PackedStringArray("health_bar_ui")]
 layout_mode = 3
@@ -267,25 +263,16 @@ texture = ExtResource("14_rggsl")
 hframes = 6
 
 [node name="PanelContainer" type="PanelContainer" parent="."]
-layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.55200005
-anchor_top = 0.68500006
-anchor_right = 0.55200005
-anchor_bottom = 0.68500006
-offset_left = -158.28003
-offset_top = -31.800018
-offset_right = 195.71997
-offset_bottom = 34.19998
-grow_horizontal = 2
-grow_vertical = 2
+layout_mode = 0
+offset_left = 183.0
+offset_top = 292.0
+offset_right = 560.0
+offset_bottom = 364.0
 theme_override_styles/panel = SubResource("StyleBoxFlat_pihy1")
 
 [node name="battle_log" type="RichTextLabel" parent="PanelContainer"]
 layout_mode = 2
 bbcode_enabled = true
-scroll_following = true
-scroll_following_visible_characters = true
 
 [connection signal="health_changed" from="Players/BattlePlayer" to="GUIMargin/Bottom/Players" method="_on_battle_player_health_changed"]
 

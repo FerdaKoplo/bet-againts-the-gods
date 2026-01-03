@@ -56,9 +56,8 @@ func display_log(message: String):
 	
 	if log_panel and log_text:
 		log_panel.show()
-		log_text.show() # Paksa teks terlihat jika property visible-nya false
-		# [FIX] Tambahkan tag [color=white] agar teks selalu putih terang
-		log_text.text = "[center][color=white]" + message + "[/color][/center]" 
+		log_text.show()
+		log_text.text = message 
 
 # Fungsi penerima signal dari Boss
 func _on_log_received(msg):
