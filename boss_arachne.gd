@@ -21,20 +21,18 @@ func take_turn(targets: Array, dice_value: int = 1):
 	var boss_luck = max(dice_value, 3) 
 	var main_target = targets[0] 
 	
-	# Logic Random Phase
 	var roll = randf()
-	var new_phase = Phase.PHASE_1 # Phase sementara untuk turn ini
+	var new_phase = Phase.PHASE_1
 	
-	# Tentukan Phase berdasarkan roll
 	if roll < 0.50:
 		new_phase = Phase.PHASE_1
-		modulate = Color(1, 1, 1) # Putih
+		self_modulate = Color(1, 1, 1) # Putih
 	elif roll < 0.85:
 		new_phase = Phase.PHASE_2
-		modulate = Color(0.7, 0.4, 1.0) # Ungu
+		self_modulate = Color(0.7, 0.4, 1.0) # Ungu
 	else:
 		new_phase = Phase.PHASE_3
-		modulate = Color(1.0, 0.3, 0.3) # Merah
+		self_modulate = Color(1.0, 0.3, 0.3) # Merah
 
 	# --- [FITUR BARU] Cek Perubahan Phase ---
 	if new_phase != current_active_phase:

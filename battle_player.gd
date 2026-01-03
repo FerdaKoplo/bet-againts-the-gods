@@ -1,6 +1,5 @@
 extends TextureButton
 
-# [1] TULIS INI AGAR MUNCUL DI LIST SIGNAL
 signal health_changed(new_hp, max_hp)
 
 var hp = 100
@@ -9,16 +8,18 @@ var status_effects = []
 var is_defending = false 
 
 func _ready() -> void:
-	# [3] Kirim signal saat mulai
 	health_changed.emit(hp, max_hp)
 
 func take_damage(amount):
 	if is_defending:
-		amount = ceil(amount / 2.0) # Diskon damage 50% (dibulatkan ke atas)
+		amount = ceil(amount / 2.0)
 		print("GUARD AKTIF! Damage berkurang menjadi: ", amount)
+	
 	hp -= amount
 	
-	# [4] Kirim signal saat kena damage
+	if hp < 0:
+		hp = 0
+	
 	health_changed.emit(hp, max_hp)
 	
 	print("Player terkena " + str(amount) + " damage! Sisa HP: " + str(hp))
